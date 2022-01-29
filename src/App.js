@@ -1,40 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "./api";
 import AddTask from "./components/AddTask";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 
-const MOCK_DATA = [1, 2].map((id) => ({
-  name: `Task ${id}`,
-  day: `Day ${id}`,
-  id,
-  reminder: id % 2 !== 0,
-}));
-
 function App() {
   const [showAddTask, setShowAddTask] = useState(false);
-  const [tasks, setTasks] = useState(MOCK_DATA);
+  const [tasks, setTasks] = useState([]);
 
-  const addTask = (task) => {
-    const id = tasks.length ? tasks.at(-1).id + 1 : 0;
-    setTasks([...tasks, { ...task, id }]);
+  const addTask = async (task) => {
+    const res = await api.addTask(task);
+    setTasks([...tasks, res]);
   };
 
-  const deleteTask = (id) => {
+  const deleteTask = async (id) => {
+    await api.deleteTask(id);
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
-  const toggleReminder = (id) => {
-    setTasks(
-      tasks.map((task) => ({
-        ...task,
-        reminder: task.id === id ? !task.reminder : task.reminder,
-      }))
-    );
+  const getTasks = async () => {
+    setTasks(await api.getTasks());
   };
 
   const toggleAddTask = () => {
     setShowAddTask(!showAddTask);
   };
+
+  const toggleReminder = async (id) => {
+    const task = await api.getTask(id);
+    const updatedTask = { ...task, reminder: !task.reminder };
+    const res = await api.updateTask(updatedTask);
+    setTasks(tasks.map((task) => (task.id === id ? res : task)));
+  };
+
+  useEffect(() => {
+    getTasks();
+  }, []);
 
   return (
     <div className="container">

@@ -8,4 +8,10 @@
 
 `serve -s build -p 8000` - production build which works without the rest of the files
 
+### Mock backend
 
+Create mock REST API with custom data
+
+`npm i json-server`
+
+`npm run server`
