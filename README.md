@@ -15,3 +15,7 @@ Create mock REST API with custom data
 `npm i json-server`
 
 `npm run server`
+
+### Add routing
+
+`npm i react-router-dom`

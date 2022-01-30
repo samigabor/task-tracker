@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
 import api from "./api";
 import AddTask from "./components/AddTask";
+import About from "./components/About";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 
@@ -44,19 +47,29 @@ function App() {
         showAddTask={showAddTask}
         toggleAddTask={toggleAddTask}
       />
-      {showAddTask && <AddTask addTask={addTask} />}
 
-      {tasks.length > 0 ? (
-        <>
-          <Tasks
-            tasks={tasks}
-            onDelete={deleteTask}
-            onToggle={toggleReminder}
-          />
-        </>
-      ) : (
-        <p>No tasks</p>
-      )}
+      <Routes>
+        <Route
+          path="/"
+          exact
+          element={
+            <>
+              {showAddTask && <AddTask addTask={addTask} />}
+              {tasks.length > 0 ? (
+                <Tasks
+                  tasks={tasks}
+                  onDelete={deleteTask}
+                  onToggle={toggleReminder}
+                />
+              ) : (
+                <p>No tasks</p>
+              )}
+              <Footer />
+            </>
+          }
+        />
+        <Route path="/about" element={<About />} />
+      </Routes>
     </div>
   );
 }
